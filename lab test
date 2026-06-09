@@ -1,0 +1,227 @@
+(4)ID3
+
+import pandas as pd
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+from sklearn.preprocessing import LabelEncoder
+
+data = pd.read_csv("data.csv")
+
+X = data.iloc[:, :-1]
+y = data.iloc[:, -1]
+
+# Convert text columns to numbers if needed
+for col in X.columns:
+    if X[col].dtype == 'object':
+        X[col] = LabelEncoder().fit_transform(X[col])
+
+if y.dtype == 'object':
+    y = LabelEncoder().fit_transform(y)
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.3, random_state=1
+)
+
+model = DecisionTreeClassifier(criterion='entropy')
+
+model.fit(X_train, y_train)
+
+pred = model.predict(X_test)
+
+print("Prediction:", pred)
+print("Accuracy:", accuracy_score(y_test, pred))
+
+
+(7)
+
+
+import pandas as pd
+from sklearn.naive_bayes import GaussianNB
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+from sklearn.preprocessing import LabelEncoder
+
+data = pd.read_csv("data.csv")
+
+X = data.iloc[:, :-1]
+y = data.iloc[:, -1]
+
+# Convert text columns to numbers if needed
+for col in X.columns:
+    if X[col].dtype == 'object':
+        X[col] = LabelEncoder().fit_transform(X[col])
+
+if y.dtype == 'object':
+    y = LabelEncoder().fit_transform(y)
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.3, random_state=1
+)
+
+model = GaussianNB()
+model.fit(X_train, y_train)
+
+pred = model.predict(X_test)
+
+print("Accuracy:", accuracy_score(y_test, pred))
+
+result = pd.DataFrame({
+    "Actual": y_test,
+    "Predicted": pred
+})
+
+result
+
+
+
+6. Document Classification using Naive Bayes
+
+import pandas as pd
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+from sklearn.preprocessing import LabelEncoder
+
+data = pd.read_csv("data.csv")
+
+X = data.iloc[:,0]      # First column
+y = data.iloc[:,-1]     # Last column
+
+y = LabelEncoder().fit_transform(y)
+
+X = CountVectorizer().fit_transform(X)
+
+X_train,X_test,y_train,y_test = train_test_split(
+    X,y,test_size=0.3,random_state=1
+)
+
+model = MultinomialNB()
+model.fit(X_train,y_train)
+
+pred = model.predict(X_test)
+
+print("Accuracy:",accuracy_score(y_test,pred))
+
+
+
+5. Naive Bayes Classifier
+
+import pandas as pd
+from sklearn.naive_bayes import GaussianNB
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+from sklearn.preprocessing import LabelEncoder
+
+# Load dataset
+data = pd.read_csv("dataset.csv")
+
+# Features and Target
+X = data.iloc[:, :-1]
+y = data.iloc[:, -1]
+
+# Convert categorical data to numeric
+le = LabelEncoder()
+
+for col in X.columns:
+    if X[col].dtype == 'object':
+        X[col] = le.fit_transform(X[col])
+
+if y.dtype == 'object':
+    y = le.fit_transform(y)
+
+# Split dataset
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.3, random_state=1
+)
+
+# Train model
+model = GaussianNB()
+model.fit(X_train, y_train)
+
+# Predict
+pred = model.predict(X_test)
+
+print("Prediction:", pred)
+print("Accuracy:", accuracy_score(y_test, pred))
+
+
+(1)Adaline
+
+import numpy as np
+
+X=np.array([[1,2],[2,3],[3,4],[4,5]])
+y=np.array([-1,-1,1,1])
+
+w=np.zeros(1+X.shape[1])
+lr=0.01
+
+for i in range(20):
+    out=np.dot(X,w[1:])+w[0]
+    err=y-out
+    w[1:]+=lr*X.T.dot(err)
+    w[0]+=lr*err.sum()
+
+pred=np.where(out>=0,1,-1)
+
+print("Weights:",w)
+print("Prediction:",pred)
+
+
+(3)candidate elimination
+
+import pandas as pd
+import numpy as np
+
+data=pd.read_csv("data.csv")
+
+c=np.array(data.iloc[:,:-1])
+t=np.array(data.iloc[:,-1])
+
+s=c[0].copy()
+
+g=[['?' for i in range(len(s))] for i in range(len(s))]
+
+for i,h in enumerate(c):
+
+    if t[i]=='Yes':
+        for x in range(len(s)):
+            if h[x]!=s[x]:
+                s[x]='?'
+                g[x][x]='?'
+
+    if t[i]=='No':
+        for x in range(len(s)):
+            if h[x]!=s[x]:
+                g[x][x]=s[x]
+            else:
+                g[x][x]='?'
+
+g=[i for i in g if i!=['?']*len(s)]
+
+print("Specific Hypothesis:",s)
+print("General Hypothesis:",g)
+
+
+(2)find s 
+
+
+import pandas as pd
+import numpy as np
+
+data=pd.read_csv("data.csv")
+
+c=np.array(data.iloc[:,:-1])
+t=np.array(data.iloc[:,-1])
+
+h=c[0].copy()
+
+for i,val in enumerate(c):
+    if t[i]=="Yes":
+        for x in range(len(h)):
+            if val[x]!=h[x]:
+                h[x]='?'
+
+print("Final Hypothesis:",h)
+
